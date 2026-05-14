@@ -1,0 +1,25 @@
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+
+// I create my Express app in this file so the server file stays clean.
+const app = express();
+
+// I allow the API to receive JSON request bodies.
+app.use(express.json());
+
+// I enable CORS so frontend apps can communicate with this backend.
+app.use(cors());
+
+// I use morgan so I can see incoming requests in my terminal during development.
+app.use(morgan("dev"));
+
+// I keep a simple health route so I can quickly test if the API is running.
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Generated backend is running successfully",
+  });
+});
+
+export default app;

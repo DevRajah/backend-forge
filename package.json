@@ -1,0 +1,28 @@
+{
+  "name": "backend-forge",
+  "version": "1.0.0",
+  "description": "A CLI tool for generating backend systems",
+  "main": "dist/index.js",
+  "bin": {
+    "backend-forge": "dist/index.js"
+  },
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^14.0.2",
+    "fs-extra": "^11.3.2",
+    "inquirer": "^12.10.0"
+  },
+  "devDependencies": {
+    "@types/chalk": "^2.2.4",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^24.0.0",
+    "copyfiles": "^2.4.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.0"
+  }
+}
