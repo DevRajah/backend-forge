@@ -6,19 +6,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createCommand = void 0;
 const commander_1 = require("commander");
 const chalk_1 = __importDefault(require("chalk"));
+const project_prompts_1 = require("../prompts/project.prompts");
 const project_generator_1 = require("../generators/project.generator");
-// This command handles: backend-forge create <project-name>
 exports.createCommand = new commander_1.Command("create")
     .description("Create a new backend project")
-    .argument("<project-name>", "Name of the backend project")
-    .action(async (projectName) => {
+    .action(async () => {
     try {
-        console.log(chalk_1.default.cyan(`Creating backend project: ${projectName}`));
-        await (0, project_generator_1.generateProject)(projectName);
-        console.log(chalk_1.default.green("Project created successfully!"));
+        // I ask the user interactive setup questions here.
+        const answers = await (0, project_prompts_1.askProjectQuestions)();
+        console.log("");
+        console.log(chalk_1.default.cyan("Generating backend project..."));
+        console.log("");
+        await (0, project_generator_1.generateProject)(answers);
+        console.log("");
+        console.log(chalk_1.default.green("Backend project created successfully."));
         console.log("");
         console.log(chalk_1.default.yellow("Next steps:"));
-        console.log(`cd ${projectName}`);
+        console.log(`cd ${answers.projectName}`);
         console.log("npm install");
         console.log("npm run dev");
     }

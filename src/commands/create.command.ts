@@ -1,21 +1,28 @@
 import { Command } from "commander";
 import chalk from "chalk";
+
+import { askProjectQuestions } from "../prompts/project.prompts";
 import { generateProject } from "../generators/project.generator";
 
-// This command handles: backend-forge create <project-name>
 export const createCommand = new Command("create")
   .description("Create a new backend project")
-  .argument("<project-name>", "Name of the backend project")
-  .action(async (projectName: string) => {
+  .action(async () => {
     try {
-      console.log(chalk.cyan(`Creating backend project: ${projectName}`));
+      // I ask the user interactive setup questions here.
+      const answers = await askProjectQuestions();
 
-      await generateProject(projectName);
-
-      console.log(chalk.green("Project created successfully!"));
       console.log("");
+      console.log(chalk.cyan("Generating backend project..."));
+      console.log("");
+
+      await generateProject(answers);
+
+      console.log("");
+      console.log(chalk.green("Backend project created successfully."));
+      console.log("");
+
       console.log(chalk.yellow("Next steps:"));
-      console.log(`cd ${projectName}`);
+      console.log(`cd ${answers.projectName}`);
       console.log("npm install");
       console.log("npm run dev");
     } catch (error) {
