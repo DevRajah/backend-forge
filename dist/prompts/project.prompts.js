@@ -7,7 +7,7 @@ exports.askProjectQuestions = void 0;
 const inquirer_1 = __importDefault(require("inquirer"));
 // I keep all CLI questions here so command files stay clean.
 const askProjectQuestions = async () => {
-    return inquirer_1.default.prompt([
+    const answers = await inquirer_1.default.prompt([
         {
             type: "input",
             name: "projectName",
@@ -56,5 +56,10 @@ const askProjectQuestions = async () => {
             default: false,
         },
     ]);
+    // I force Redis on when BullMQ is selected because BullMQ needs Redis to work.
+    if (answers.useBullMQ) {
+        answers.useRedis = true;
+    }
+    return answers;
 };
 exports.askProjectQuestions = askProjectQuestions;

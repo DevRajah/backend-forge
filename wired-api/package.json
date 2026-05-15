@@ -1,5 +1,5 @@
 {
-  "name": "test-all",
+  "name": "wired-api",
   "version": "1.0.0",
   "description": "Generated backend project from Backend Forge.",
   "main": "dist/server.js",

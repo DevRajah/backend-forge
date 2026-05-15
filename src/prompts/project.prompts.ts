@@ -1,8 +1,9 @@
 import inquirer from "inquirer";
+import { ProjectOptions } from "../types/project-options";
 
 // I keep all CLI questions here so command files stay clean.
-export const askProjectQuestions = async () => {
-  return inquirer.prompt([
+export const askProjectQuestions = async (): Promise<ProjectOptions> => {
+  const answers = await inquirer.prompt<ProjectOptions>([
     {
       type: "input",
       name: "projectName",
@@ -15,42 +16,36 @@ export const askProjectQuestions = async () => {
         return true;
       },
     },
-
     {
       type: "confirm",
       name: "useMongoDB",
       message: "Use MongoDB?",
       default: true,
     },
-
     {
       type: "confirm",
       name: "useRedis",
       message: "Use Redis?",
       default: false,
     },
-
     {
       type: "confirm",
       name: "useBullMQ",
       message: "Use BullMQ?",
       default: false,
     },
-
     {
       type: "confirm",
       name: "useSocketIO",
       message: "Use Socket.IO?",
       default: false,
     },
-
     {
       type: "confirm",
       name: "useJWTAuth",
       message: "Use JWT Authentication?",
       default: false,
     },
-
     {
       type: "confirm",
       name: "useDocker",
@@ -58,4 +53,11 @@ export const askProjectQuestions = async () => {
       default: false,
     },
   ]);
+
+  // I force Redis on when BullMQ is selected because BullMQ needs Redis to work.
+  if (answers.useBullMQ) {
+    answers.useRedis = true;
+  }
+
+  return answers;
 };
