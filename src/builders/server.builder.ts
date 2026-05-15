@@ -3,7 +3,6 @@ import { ProjectOptions } from "../types/project-options";
 // I build server.ts dynamically so selected features are wired automatically.
 export const buildServerFile = (options: ProjectOptions) => {
   const imports: string[] = [
-    `import dotenv from "dotenv";`,
     `import http from "http";`,
     ``,
     `import app from "./app";`,
@@ -42,7 +41,6 @@ export const buildServerFile = (options: ProjectOptions) => {
 
   return `${imports.join("\n")}
 
-dotenv.config();
 
 // I use a bootstrap function so async startup tasks like database or Redis connection can run before the server starts.
 const bootstrap = async () => {

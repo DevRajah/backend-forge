@@ -25,6 +25,26 @@ exports.createCommand = new commander_1.Command("create")
         console.log(`cd ${answers.projectName}`);
         console.log("npm install");
         console.log("npm run dev");
+        console.log("");
+        console.log(chalk_1.default.cyan("Generated features:"));
+        if (answers.useMongoDB) {
+            console.log("- MongoDB");
+        }
+        if (answers.useRedis) {
+            console.log("- Redis");
+        }
+        if (answers.useBullMQ) {
+            console.log("- BullMQ");
+        }
+        if (answers.useSocketIO) {
+            console.log("- Socket.IO");
+        }
+        if (answers.useJWTAuth) {
+            console.log("- JWT Authentication");
+        }
+        if (answers.useDocker) {
+            console.log("- Docker");
+        }
     }
     catch (error) {
         console.error(chalk_1.default.red("Failed to create project"));

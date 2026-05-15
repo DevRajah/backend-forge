@@ -55,8 +55,11 @@ const generateProject = async (options) => {
     await fs_extra_1.default.writeJson(packageJsonPath, updatedPackageJson, {
         spaces: 2,
     });
-    // I generate the correct .env.example based on selected features.
-    await fs_extra_1.default.writeFile(path_1.default.join(targetPath, ".env.example"), (0, env_builder_1.buildEnvExample)(options));
+    const envContent = (0, env_builder_1.buildEnvExample)(options);
+    // I generate .env.example so developers know required variables.
+    await fs_extra_1.default.writeFile(path_1.default.join(targetPath, ".env.example"), envContent);
+    // I also generate a working .env automatically for immediate startup.
+    await fs_extra_1.default.writeFile(path_1.default.join(targetPath, ".env"), envContent);
     // I generate server.ts dynamically so selected features are wired automatically.
     await fs_extra_1.default.writeFile(path_1.default.join(targetPath, "src/server.ts"), (0, server_builder_1.buildServerFile)(options));
 };

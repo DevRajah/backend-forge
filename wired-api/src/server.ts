@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import http from "http";
 
 import app from "./app";
@@ -7,7 +6,6 @@ import { connectDatabase } from "./config/database";
 import { connectRedis } from "./config/redis";
 import { initializeSocket } from "./sockets/socket";
 
-dotenv.config();
 
 // I use a bootstrap function so async startup tasks like database or Redis connection can run before the server starts.
 const bootstrap = async () => {
