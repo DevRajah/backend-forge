@@ -31,7 +31,7 @@ npx @michealadekunle/backend-forge create
 
 ---
 
-## Usage
+## Commands
 
 ### Create Project
 
@@ -44,7 +44,10 @@ backend-forge create
 ```bash
 backend-forge generate module users
 ```
-
+## Generate CRUD Module
+```bash
+backend-forge generate module users --crud
+```
 ---
 
 ## Generated Features
