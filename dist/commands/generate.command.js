@@ -15,6 +15,21 @@ exports.generateCommand
     .alias("m")
     .description("Generate a modular backend feature")
     .argument("<module-name>", "Name of the module to generate")
+    .addHelpText("after", `
+Examples:
+  backend-forge generate module users
+  backend-forge g m payments
+
+Generated files:
+  - controller
+  - service
+  - routes
+  - validator
+  - types
+
+The module route is automatically registered inside:
+  src/routes/index.ts
+`)
     .action(async (moduleName) => {
     try {
         console.log(chalk_1.default.cyan(`Generating module: ${moduleName}`));

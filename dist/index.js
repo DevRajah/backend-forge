@@ -14,7 +14,16 @@ const program = new commander_1.Command();
 program
     .name("backend-forge")
     .description("Generate production-ready backend systems from your terminal.")
-    .version("1.0.0");
+    .version("1.2.0")
+    .addHelpText("after", `
+Examples:
+  backend-forge create
+  backend-forge generate module users
+  backend-forge g m payments
+
+Documentation:
+  https://github.com/DevRajah/backend-forge
+`);
 // I register the create command here.
 // Example: backend-forge create my-api
 program.addCommand(create_command_1.createCommand);
