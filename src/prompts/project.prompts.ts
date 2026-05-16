@@ -55,9 +55,14 @@ export const askProjectQuestions = async (): Promise<ProjectOptions> => {
   ]);
 
   // I force Redis on when BullMQ is selected because BullMQ needs Redis to work.
-  if (answers.useBullMQ) {
-    answers.useRedis = true;
-  }
+ if (answers.useBullMQ && !answers.useRedis) {
+  console.log("");
+  console.log(
+    "BullMQ requires Redis. Redis has been automatically enabled."
+  );
+
+  answers.useRedis = true;
+}
 
   return answers;
 };

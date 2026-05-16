@@ -1,0 +1,9 @@
+src
+node_modules
+test-api
+test-api-2
+wired-api
+test-feature-api
+*.tgz
+.env
+.git

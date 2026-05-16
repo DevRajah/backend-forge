@@ -1,5 +1,5 @@
 {
-  "name": "backend-forge",
+  "name": "@michealadekunle/backend-forge",
   "version": "1.0.0",
   "description": "A CLI tool for generating backend systems",
   "main": "dist/index.js",
@@ -11,6 +11,11 @@
     "build": "tsc",
     "start": "node dist/index.js"
   },
+  "files": [
+    "dist",
+    "templates",
+    "README.md"
+  ],
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^14.0.2",
@@ -21,7 +26,6 @@
     "@types/chalk": "^2.2.4",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^24.0.0",
-    "copyfiles": "^2.4.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.0.0"
   }
