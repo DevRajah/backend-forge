@@ -8,6 +8,7 @@ const path_1 = __importDefault(require("path"));
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const string_utils_1 = require("../../utils/string.utils");
 const module_files_builder_1 = require("../../builders/module/module-files.builder");
+const route_registrar_builder_1 = require("../../builders/module/route-registrar.builder");
 const generateModule = async (moduleName) => {
     const kebabName = (0, string_utils_1.toKebabCase)(moduleName);
     const modulesRoot = path_1.default.join(process.cwd(), "src/modules");
@@ -22,5 +23,6 @@ const generateModule = async (moduleName) => {
     await fs_extra_1.default.writeFile(path_1.default.join(modulePath, `${kebabName}.routes.ts`), (0, module_files_builder_1.buildRoutesFile)(moduleName));
     await fs_extra_1.default.writeFile(path_1.default.join(modulePath, `${kebabName}.types.ts`), (0, module_files_builder_1.buildTypesFile)(moduleName));
     await fs_extra_1.default.writeFile(path_1.default.join(modulePath, `${kebabName}.validator.ts`), (0, module_files_builder_1.buildValidatorFile)(moduleName));
+    await (0, route_registrar_builder_1.registerModuleRoute)(moduleName);
 };
 exports.generateModule = generateModule;

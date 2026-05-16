@@ -9,6 +9,7 @@ import {
   buildTypesFile,
   buildValidatorFile,
 } from "../../builders/module/module-files.builder";
+import { registerModuleRoute } from "../../builders/module/route-registrar.builder";
 
 export const generateModule = async (moduleName: string) => {
   const kebabName = toKebabCase(moduleName);
@@ -48,4 +49,6 @@ export const generateModule = async (moduleName: string) => {
     path.join(modulePath, `${kebabName}.validator.ts`),
     buildValidatorFile(moduleName)
   );
+
+  await registerModuleRoute(moduleName);
 };

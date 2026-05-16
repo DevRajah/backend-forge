@@ -21,8 +21,10 @@ exports.generateCommand
         await (0, module_generator_1.generateModule)(moduleName);
         console.log(chalk_1.default.green("Module generated successfully."));
         console.log("");
-        console.log(chalk_1.default.yellow("Generated files:"));
+        console.log(chalk_1.default.yellow("Generated module:"));
         console.log(`src/modules/${moduleName}/`);
+        console.log("");
+        console.log(chalk_1.default.cyan("Route registered automatically."));
     }
     catch (error) {
         console.error(chalk_1.default.red("Failed to generate module"));
