@@ -1,6 +1,6 @@
 {
   "name": "@michealadekunle/backend-forge",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A CLI tool for generating backend systems",
   "main": "dist/index.js",
   "bin": {
