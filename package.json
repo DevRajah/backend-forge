@@ -1,6 +1,6 @@
 {
   "name": "@michealadekunle/backend-forge",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "description": "A CLI tool for generating backend systems",
   "main": "dist/index.js",
@@ -18,17 +18,17 @@
     "README.md"
   ],
   "keywords": [
-  "backend",
-  "cli",
-  "typescript",
-  "express",
-  "scaffolding",
-  "generator",
-  "nodejs",
-  "automation",
-  "tooling",
-  "architecture"
-],
+    "backend",
+    "cli",
+    "typescript",
+    "express",
+    "scaffolding",
+    "generator",
+    "nodejs",
+    "automation",
+    "tooling",
+    "architecture"
+  ],
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^14.0.2",
