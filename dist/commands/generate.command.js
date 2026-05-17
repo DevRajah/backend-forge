@@ -15,9 +15,11 @@ exports.generateCommand
     .alias("m")
     .description("Generate a modular backend feature")
     .argument("<module-name>", "Name of the module to generate")
+    .option("--crud", "Generate full CRUD endpoints")
     .addHelpText("after", `
 Examples:
   backend-forge generate module users
+  backend-forge generate module products --crud
   backend-forge g m payments
 
 Generated files:
@@ -30,14 +32,20 @@ Generated files:
 The module route is automatically registered inside:
   src/routes/index.ts
 `)
-    .action(async (moduleName) => {
+    .action(async (moduleName, options) => {
     try {
         console.log(chalk_1.default.cyan(`Generating module: ${moduleName}`));
-        await (0, module_generator_1.generateModule)(moduleName);
+        await (0, module_generator_1.generateModule)(moduleName, {
+            crud: options.crud,
+        });
         console.log(chalk_1.default.green("Module generated successfully."));
         console.log("");
         console.log(chalk_1.default.yellow("Generated module:"));
         console.log(`src/modules/${moduleName}/`);
+        if (options.crud) {
+            console.log("");
+            console.log(chalk_1.default.cyan("CRUD endpoints generated."));
+        }
         console.log("");
         console.log(chalk_1.default.cyan("Route registered automatically."));
     }

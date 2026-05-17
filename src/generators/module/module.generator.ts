@@ -1,9 +1,14 @@
 import path from "path";
 import fs from "fs-extra";
 
+import { ModuleGeneratorOptions } from "../../types/module-options";
 import { toKebabCase } from "../../utils/string.utils";
 import {
   buildControllerFile,
+  buildCrudControllerFile,
+  buildCrudRoutesFile,
+  buildCrudServiceFile,
+  buildCrudTypesFile,
   buildRoutesFile,
   buildServiceFile,
   buildTypesFile,
@@ -12,7 +17,10 @@ import {
 import { registerModuleRoute } from "../../builders/module/route-registrar.builder";
 import { validateBackendForgeProject } from "../../utils/project-validator";
 
-export const generateModule = async (moduleName: string) => {
+export const generateModule = async (
+  moduleName: string,
+  options?: ModuleGeneratorOptions
+) => {
   await validateBackendForgeProject();
 
   const kebabName = toKebabCase(moduleName);
@@ -32,23 +40,27 @@ export const generateModule = async (moduleName: string) => {
 
   await fs.writeFile(
     path.join(modulePath, `${kebabName}.controller.ts`),
-    buildControllerFile(moduleName)
+    options?.crud
+      ? buildCrudControllerFile(moduleName)
+      : buildControllerFile(moduleName)
   );
 
   await fs.writeFile(
     path.join(modulePath, `${kebabName}.service.ts`),
-    buildServiceFile(moduleName)
+    options?.crud
+      ? buildCrudServiceFile(moduleName)
+      : buildServiceFile(moduleName)
   );
 
   await fs.writeFile(
     path.join(modulePath, `${kebabName}.routes.ts`),
-    buildRoutesFile(moduleName)
+    options?.crud ? buildCrudRoutesFile(moduleName) : buildRoutesFile(moduleName)
   );
 
   await fs.writeFile(
     path.join(modulePath, `${kebabName}.types.ts`),
-    buildTypesFile(moduleName)
-  );
+    options?.crud ? buildCrudTypesFile(moduleName) : buildTypesFile(moduleName)
+  ); 
 
   await fs.writeFile(
     path.join(modulePath, `${kebabName}.validator.ts`),
