@@ -1,9 +1,12 @@
 import inquirer from "inquirer";
 import { ProjectOptions } from "../types/project-options";
+import { PresetKey, presetConfigs } from "../config/presets.config";
 
 // I keep all CLI questions here so command files stay clean.
-export const askProjectQuestions = async (): Promise<ProjectOptions> => {
-  const answers = await inquirer.prompt<ProjectOptions>([
+export const askProjectQuestions = async (
+  preset?: PresetKey
+): Promise<ProjectOptions> => {
+  const projectNameAnswer = await inquirer.prompt<Pick<ProjectOptions, "projectName">>([
     {
       type: "input",
       name: "projectName",
@@ -16,6 +19,28 @@ export const askProjectQuestions = async (): Promise<ProjectOptions> => {
         return true;
       },
     },
+  ]);
+
+  if (preset) {
+    const presetConfig = presetConfigs[preset];
+
+    if (!presetConfig) {
+      throw new Error(
+        `Unknown preset "${preset}". Available presets: minimal, realtime, fintech`
+      );
+    }
+
+    console.log("");
+    console.log(`Using ${presetConfig.label} preset.`);
+    console.log(presetConfig.description);
+
+    return {
+      projectName: projectNameAnswer.projectName,
+      ...presetConfig.options,
+    };
+  }
+
+  const answers = await inquirer.prompt<Omit<ProjectOptions, "projectName">>([
     {
       type: "confirm",
       name: "useMongoDB",
@@ -54,15 +79,15 @@ export const askProjectQuestions = async (): Promise<ProjectOptions> => {
     },
   ]);
 
-  // I force Redis on when BullMQ is selected because BullMQ needs Redis to work.
- if (answers.useBullMQ && !answers.useRedis) {
-  console.log("");
-  console.log(
-    "BullMQ requires Redis. Redis has been automatically enabled."
-  );
+  if (answers.useBullMQ && !answers.useRedis) {
+    console.log("");
+    console.log("BullMQ requires Redis. Redis has been automatically enabled.");
 
-  answers.useRedis = true;
-}
+    answers.useRedis = true;
+  }
 
-  return answers;
+  return {
+    projectName: projectNameAnswer.projectName,
+    ...answers,
+  };
 };

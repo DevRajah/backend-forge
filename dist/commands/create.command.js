@@ -8,12 +8,26 @@ const commander_1 = require("commander");
 const chalk_1 = __importDefault(require("chalk"));
 const project_prompts_1 = require("../prompts/project.prompts");
 const project_generator_1 = require("../generators/project.generator");
+const presets_config_1 = require("../config/presets.config");
 exports.createCommand = new commander_1.Command("create")
     .description("Create a new backend project")
-    .action(async () => {
+    .option("-p, --preset <preset>", "Use a preset architecture: minimal, realtime, fintech")
+    .addHelpText("after", `
+Examples:
+  backend-forge create
+  backend-forge create --preset minimal
+  backend-forge create --preset realtime
+  backend-forge create --preset fintech
+
+Presets:
+  minimal   Express + TypeScript base architecture only
+  realtime  MongoDB + Redis + Socket.IO + JWT + Docker
+  fintech   MongoDB + Redis + BullMQ + JWT + Docker
+`)
+    .action(async (commandOptions) => {
     try {
-        // I ask the user interactive setup questions here.
-        const answers = await (0, project_prompts_1.askProjectQuestions)();
+        const preset = commandOptions.preset;
+        const answers = await (0, project_prompts_1.askProjectQuestions)(preset);
         console.log("");
         console.log(chalk_1.default.cyan("Generating backend project..."));
         console.log("");
@@ -21,29 +35,36 @@ exports.createCommand = new commander_1.Command("create")
         console.log("");
         console.log(chalk_1.default.green("Backend project created successfully."));
         console.log("");
+        if (preset && presets_config_1.presetConfigs[preset]) {
+            console.log(chalk_1.default.cyan(`Preset used: ${presets_config_1.presetConfigs[preset].label}`));
+            console.log(chalk_1.default.gray(presets_config_1.presetConfigs[preset].description));
+            console.log("");
+        }
         console.log(chalk_1.default.yellow("Next steps:"));
         console.log(`cd ${answers.projectName}`);
         console.log("npm install");
         console.log("npm run dev");
         console.log("");
         console.log(chalk_1.default.cyan("Generated features:"));
-        if (answers.useMongoDB) {
+        if (answers.useMongoDB)
             console.log("- MongoDB");
-        }
-        if (answers.useRedis) {
+        if (answers.useRedis)
             console.log("- Redis");
-        }
-        if (answers.useBullMQ) {
+        if (answers.useBullMQ)
             console.log("- BullMQ");
-        }
-        if (answers.useSocketIO) {
+        if (answers.useSocketIO)
             console.log("- Socket.IO");
-        }
-        if (answers.useJWTAuth) {
+        if (answers.useJWTAuth)
             console.log("- JWT Authentication");
-        }
-        if (answers.useDocker) {
+        if (answers.useDocker)
             console.log("- Docker");
+        if (!answers.useMongoDB &&
+            !answers.useRedis &&
+            !answers.useBullMQ &&
+            !answers.useSocketIO &&
+            !answers.useJWTAuth &&
+            !answers.useDocker) {
+            console.log("- Base Express + TypeScript architecture");
         }
     }
     catch (error) {

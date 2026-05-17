@@ -3,13 +3,34 @@ import chalk from "chalk";
 
 import { askProjectQuestions } from "../prompts/project.prompts";
 import { generateProject } from "../generators/project.generator";
+import { PresetKey, presetConfigs } from "../config/presets.config";
 
 export const createCommand = new Command("create")
   .description("Create a new backend project")
-  .action(async () => {
+  .option(
+    "-p, --preset <preset>",
+    "Use a preset architecture: minimal, realtime, fintech"
+  )
+  .addHelpText(
+    "after",
+    `
+Examples:
+  backend-forge create
+  backend-forge create --preset minimal
+  backend-forge create --preset realtime
+  backend-forge create --preset fintech
+
+Presets:
+  minimal   Express + TypeScript base architecture only
+  realtime  MongoDB + Redis + Socket.IO + JWT + Docker
+  fintech   MongoDB + Redis + BullMQ + JWT + Docker
+`
+  )
+  .action(async (commandOptions: { preset?: string }) => {
     try {
-      // I ask the user interactive setup questions here.
-      const answers = await askProjectQuestions();
+      const preset = commandOptions.preset as PresetKey | undefined;
+
+      const answers = await askProjectQuestions(preset);
 
       console.log("");
       console.log(chalk.cyan("Generating backend project..."));
@@ -21,6 +42,12 @@ export const createCommand = new Command("create")
       console.log(chalk.green("Backend project created successfully."));
       console.log("");
 
+      if (preset && presetConfigs[preset]) {
+        console.log(chalk.cyan(`Preset used: ${presetConfigs[preset].label}`));
+        console.log(chalk.gray(presetConfigs[preset].description));
+        console.log("");
+      }
+
       console.log(chalk.yellow("Next steps:"));
       console.log(`cd ${answers.projectName}`);
       console.log("npm install");
@@ -29,28 +56,22 @@ export const createCommand = new Command("create")
       console.log("");
       console.log(chalk.cyan("Generated features:"));
 
-      if (answers.useMongoDB) {
-        console.log("- MongoDB");
-      }
+      if (answers.useMongoDB) console.log("- MongoDB");
+      if (answers.useRedis) console.log("- Redis");
+      if (answers.useBullMQ) console.log("- BullMQ");
+      if (answers.useSocketIO) console.log("- Socket.IO");
+      if (answers.useJWTAuth) console.log("- JWT Authentication");
+      if (answers.useDocker) console.log("- Docker");
 
-      if (answers.useRedis) {
-        console.log("- Redis");
-      }
-
-      if (answers.useBullMQ) {
-        console.log("- BullMQ");
-      }
-
-      if (answers.useSocketIO) {
-        console.log("- Socket.IO");
-      }
-
-      if (answers.useJWTAuth) {
-        console.log("- JWT Authentication");
-      }
-
-      if (answers.useDocker) {
-        console.log("- Docker");
+      if (
+        !answers.useMongoDB &&
+        !answers.useRedis &&
+        !answers.useBullMQ &&
+        !answers.useSocketIO &&
+        !answers.useJWTAuth &&
+        !answers.useDocker
+      ) {
+        console.log("- Base Express + TypeScript architecture");
       }
     } catch (error) {
       console.error(chalk.red("Failed to create project"));
