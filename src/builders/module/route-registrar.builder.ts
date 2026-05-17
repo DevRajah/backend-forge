@@ -14,7 +14,7 @@ export const registerModuleRoute = async (moduleName: string) => {
 
   if (!routesIndexExists) {
     throw new Error(
-      "Could not find src/routes/index.ts. Run this command inside a Backend Forge generated project."
+      "Could not locate src/routes/index.ts.\nThis command must be run inside a valid Backend Forge project."
     );
   }
 

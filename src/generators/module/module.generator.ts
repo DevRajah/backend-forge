@@ -10,8 +10,11 @@ import {
   buildValidatorFile,
 } from "../../builders/module/module-files.builder";
 import { registerModuleRoute } from "../../builders/module/route-registrar.builder";
+import { validateBackendForgeProject } from "../../utils/project-validator";
 
 export const generateModule = async (moduleName: string) => {
+  await validateBackendForgeProject();
+
   const kebabName = toKebabCase(moduleName);
 
   const modulesRoot = path.join(process.cwd(), "src/modules");
@@ -20,7 +23,9 @@ export const generateModule = async (moduleName: string) => {
   const moduleAlreadyExists = await fs.pathExists(modulePath);
 
   if (moduleAlreadyExists) {
-    throw new Error(`Module "${kebabName}" already exists.`);
+    throw new Error(
+      `A module named "${kebabName}" already exists at:\n${modulePath}`
+    );
   }
 
   await fs.ensureDir(modulePath);

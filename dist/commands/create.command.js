@@ -27,6 +27,10 @@ Presets:
     .action(async (commandOptions) => {
     try {
         const preset = commandOptions.preset;
+        if (preset &&
+            !["minimal", "realtime", "fintech"].includes(preset)) {
+            throw new Error(`Unknown preset "${preset}". Available presets:\n- minimal\n- realtime\n- fintech`);
+        }
         const answers = await (0, project_prompts_1.askProjectQuestions)(preset);
         console.log("");
         console.log(chalk_1.default.cyan("Generating backend project..."));

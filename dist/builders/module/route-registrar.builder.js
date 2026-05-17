@@ -14,7 +14,7 @@ const registerModuleRoute = async (moduleName) => {
     const routesIndexPath = path_1.default.join(process.cwd(), "src/routes/index.ts");
     const routesIndexExists = await fs_extra_1.default.pathExists(routesIndexPath);
     if (!routesIndexExists) {
-        throw new Error("Could not find src/routes/index.ts. Run this command inside a Backend Forge generated project.");
+        throw new Error("Could not locate src/routes/index.ts.\nThis command must be run inside a valid Backend Forge project.");
     }
     let fileContent = await fs_extra_1.default.readFile(routesIndexPath, "utf-8");
     const importLine = `import ${camelName}Routes from "../modules/${kebabName}/${kebabName}.routes";`;

@@ -30,6 +30,15 @@ Presets:
     try {
       const preset = commandOptions.preset as PresetKey | undefined;
 
+      if (
+        preset &&
+        !["minimal", "realtime", "fintech"].includes(preset)
+      ) {
+        throw new Error(
+          `Unknown preset "${preset}". Available presets:\n- minimal\n- realtime\n- fintech`
+        );
+      }
+
       const answers = await askProjectQuestions(preset);
 
       console.log("");
