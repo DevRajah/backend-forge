@@ -9,6 +9,8 @@ const fs_extra_1 = __importDefault(require("fs-extra"));
 const server_builder_1 = require("../builders/server.builder");
 const env_builder_1 = require("../builders/env.builder");
 const package_builder_1 = require("../builders/package.builder");
+const features_config_1 = require("../config/features.config");
+const feature_resolver_1 = require("../config/feature-resolver");
 const copyFeature = async (featureName, targetPath) => {
     const featurePath = path_1.default.join(__dirname, "../../templates/features", featureName);
     const featureExists = await fs_extra_1.default.pathExists(featurePath);
@@ -30,23 +32,11 @@ const generateProject = async (options) => {
     }
     // I copy the base backend architecture first.
     await fs_extra_1.default.copy(baseTemplatePath, targetPath);
-    if (options.useMongoDB) {
-        await copyFeature("mongodb", targetPath);
-    }
-    if (options.useRedis) {
-        await copyFeature("redis", targetPath);
-    }
-    if (options.useBullMQ) {
-        await copyFeature("bullmq", targetPath);
-    }
-    if (options.useSocketIO) {
-        await copyFeature("socketio", targetPath);
-    }
-    if (options.useJWTAuth) {
-        await copyFeature("jwt-auth", targetPath);
-    }
-    if (options.useDocker) {
-        await copyFeature("docker", targetPath);
+    // I resolve selected features from one central config system.
+    const selectedFeatures = (0, feature_resolver_1.getSelectedFeatures)(options);
+    const resolvedFeatures = (0, feature_resolver_1.resolveFeatureDependencies)(selectedFeatures);
+    for (const feature of resolvedFeatures) {
+        await copyFeature(features_config_1.featureConfigs[feature].templateFolder, targetPath);
     }
     // I update package.json based on selected features.
     const packageJsonPath = path_1.default.join(targetPath, "package.json");

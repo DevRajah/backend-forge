@@ -5,6 +5,11 @@ import { ProjectOptions } from "../types/project-options";
 import { buildServerFile } from "../builders/server.builder";
 import { buildEnvExample } from "../builders/env.builder";
 import { applyPackageFeatures } from "../builders/package.builder";
+import { featureConfigs } from "../config/features.config";
+import {
+  getSelectedFeatures,
+  resolveFeatureDependencies,
+} from "../config/feature-resolver";
 
 const copyFeature = async (featureName: string, targetPath: string) => {
   const featurePath = path.join(
@@ -29,7 +34,6 @@ const copyFeature = async (featureName: string, targetPath: string) => {
 
 export const generateProject = async (options: ProjectOptions) => {
   const targetPath = path.join(process.cwd(), options.projectName);
-
   const baseTemplatePath = path.join(__dirname, "../../templates/base");
 
   const projectAlreadyExists = await fs.pathExists(targetPath);
@@ -41,28 +45,12 @@ export const generateProject = async (options: ProjectOptions) => {
   // I copy the base backend architecture first.
   await fs.copy(baseTemplatePath, targetPath);
 
-  if (options.useMongoDB) {
-    await copyFeature("mongodb", targetPath);
-  }
+  // I resolve selected features from one central config system.
+  const selectedFeatures = getSelectedFeatures(options);
+  const resolvedFeatures = resolveFeatureDependencies(selectedFeatures);
 
-  if (options.useRedis) {
-    await copyFeature("redis", targetPath);
-  }
-
-  if (options.useBullMQ) {
-    await copyFeature("bullmq", targetPath);
-  }
-
-  if (options.useSocketIO) {
-    await copyFeature("socketio", targetPath);
-  }
-
-  if (options.useJWTAuth) {
-    await copyFeature("jwt-auth", targetPath);
-  }
-
-  if (options.useDocker) {
-    await copyFeature("docker", targetPath);
+  for (const feature of resolvedFeatures) {
+    await copyFeature(featureConfigs[feature].templateFolder, targetPath);
   }
 
   // I update package.json based on selected features.
@@ -76,17 +64,11 @@ export const generateProject = async (options: ProjectOptions) => {
 
   const envContent = buildEnvExample(options);
 
-// I generate .env.example so developers know required variables.
-await fs.writeFile(
-  path.join(targetPath, ".env.example"),
-  envContent
-);
+  // I generate .env.example so developers know required variables.
+  await fs.writeFile(path.join(targetPath, ".env.example"), envContent);
 
-// I also generate a working .env automatically for immediate startup.
-await fs.writeFile(
-  path.join(targetPath, ".env"),
-  envContent
-);
+  // I also generate a working .env automatically for immediate startup.
+  await fs.writeFile(path.join(targetPath, ".env"), envContent);
 
   // I generate server.ts dynamically so selected features are wired automatically.
   await fs.writeFile(

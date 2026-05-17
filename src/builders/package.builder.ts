@@ -1,42 +1,44 @@
-import { ProjectOptions } from "../types/project-options";
 import forgePackageJson from "../../package.json";
+import { ProjectOptions } from "../types/project-options";
+import { featureConfigs } from "../config/features.config";
+import {
+  getSelectedFeatures,
+  resolveFeatureDependencies,
+} from "../config/feature-resolver";
 
-// I keep dependency changes here so the main generator does not become messy.
+// I keep dependency changes here so the main generator stays clean.
 export const applyPackageFeatures = (
-    packageJson: any,
-    options: ProjectOptions
+  packageJson: any,
+  options: ProjectOptions
 ) => {
-    packageJson.name = options.projectName;
+  packageJson.name = options.projectName;
 
-    packageJson.generatedBy =
-        "@michealadekunle/backend-forge";
+  packageJson.generatedBy = "@michealadekunle/backend-forge";
+  packageJson.generatorVersion = forgePackageJson.version;
 
-    packageJson.generatorVersion =
-        forgePackageJson.version;
+  packageJson.dependencies = packageJson.dependencies || {};
+  packageJson.devDependencies = packageJson.devDependencies || {};
 
-    packageJson.dependencies = packageJson.dependencies || {};
-    packageJson.devDependencies = packageJson.devDependencies || {};
+  const selectedFeatures = getSelectedFeatures(options);
+  const resolvedFeatures = resolveFeatureDependencies(selectedFeatures);
 
-    if (options.useMongoDB) {
-        packageJson.dependencies["mongoose"] = "^8.15.1";
+  for (const feature of resolvedFeatures) {
+    const config = featureConfigs[feature];
+
+    if (config.packageDependencies) {
+      packageJson.dependencies = {
+        ...packageJson.dependencies,
+        ...config.packageDependencies,
+      };
     }
 
-    if (options.useRedis) {
-        packageJson.dependencies["redis"] = "^5.1.0";
+    if (config.packageDevDependencies) {
+      packageJson.devDependencies = {
+        ...packageJson.devDependencies,
+        ...config.packageDevDependencies,
+      };
     }
+  }
 
-    if (options.useBullMQ) {
-        packageJson.dependencies["bullmq"] = "^5.53.2";
-    }
-
-    if (options.useSocketIO) {
-        packageJson.dependencies["socket.io"] = "^4.8.1";
-    }
-
-    if (options.useJWTAuth) {
-        packageJson.dependencies["jsonwebtoken"] = "^9.0.2";
-        packageJson.devDependencies["@types/jsonwebtoken"] = "^9.0.10";
-    }
-
-    return packageJson;
+  return packageJson;
 };
