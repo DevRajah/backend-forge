@@ -2,6 +2,8 @@
 
 Production-grade backend scaffolding and architecture automation CLI for modern Node.js systems.
 
+---
+
 ## Features
 
 - Interactive backend project generation
@@ -11,13 +13,20 @@ Production-grade backend scaffolding and architecture automation CLI for modern 
 - Socket.IO support
 - JWT authentication scaffolding
 - Docker support
-- Modular resource generation
+- Modular backend resource generation
+- Optional CRUD module generation
+- Automatic route registration
 - Dynamic environment generation
+- Smart feature dependency resolution
+- Backend Forge project validation
 - Architecture-aware backend wiring
+- Optional architecture presets
 
 ---
 
 ## Installation
+
+Install globally:
 
 ```bash
 npm install -g @michealadekunle/backend-forge
@@ -44,10 +53,108 @@ backend-forge create
 ```bash
 backend-forge generate module users
 ```
-## Generate CRUD Module
+
+### Generate CRUD Module
+
 ```bash
-backend-forge generate module users --crud
+backend-forge generate module products --crud
 ```
+
+---
+
+## Presets
+
+Backend Forge supports optional architecture presets.
+
+### Realtime System
+
+```bash
+backend-forge create --preset realtime
+```
+
+Includes:
+
+- MongoDB
+- Redis
+- Socket.IO
+- JWT Authentication
+- Docker
+
+### Fintech API
+
+```bash
+backend-forge create --preset fintech
+```
+
+Includes:
+
+- MongoDB
+- Redis
+- BullMQ
+- JWT Authentication
+- Docker
+
+### Minimal API
+
+```bash
+backend-forge create --preset minimal
+```
+
+Includes:
+
+- Base Express + TypeScript architecture only
+
+---
+
+## Quick Example
+
+### Create Project
+
+```bash
+backend-forge create
+```
+
+### Generate Module
+
+```bash
+backend-forge generate module users
+```
+
+Generated automatically:
+
+```txt
+src/modules/users/
+├── users.controller.ts
+├── users.service.ts
+├── users.routes.ts
+├── users.types.ts
+└── users.validator.ts
+```
+
+Routes are automatically registered in:
+
+```txt
+src/routes/index.ts
+```
+
+---
+
+## CRUD Example
+
+```bash
+backend-forge generate module products --crud
+```
+
+Generated endpoints:
+
+```txt
+GET    /products
+GET    /products/:id
+POST   /products
+PATCH  /products/:id
+DELETE /products/:id
+```
+
 ---
 
 ## Generated Features
@@ -61,28 +168,35 @@ Backend Forge can generate:
 - JWT middleware
 - Docker setup
 - Modular backend resources
+- CRUD-ready controllers and routes
 
 ---
 
-## Example
+## Example Workflow
 
 ```bash
-npx @michealadekunle/backend-forge create
-```
+backend-forge create --preset fintech
 
-Then answer the interactive prompts.
+cd my-project
+
+npm install
+
+backend-forge generate module payments --crud
+
+npm run dev
+```
 
 ---
 
 ## Roadmap
 
-- Auto route registration
-- CRUD generation engine
-- Swagger/OpenAPI support
-- Prisma support
+- Swagger/OpenAPI generation
+- Prisma/PostgreSQL support
 - Authentication presets
-- Event-driven architecture templates
+- Microservice architecture templates
 - Plugin ecosystem
+- Testing generators
+- CI/CD scaffolding
 
 ---
 
