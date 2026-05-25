@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs-extra";
-
+import { buildAppFile } from "../builders/app.builder";
 import { ProjectOptions } from "../types/project-options";
 import { buildServerFile } from "../builders/server.builder";
 import { buildEnvExample } from "../builders/env.builder";
@@ -75,4 +75,9 @@ export const generateProject = async (options: ProjectOptions) => {
     path.join(targetPath, "src/server.ts"),
     buildServerFile(options)
   );
+
+  await fs.writeFile(
+  path.join(targetPath, "src/app.ts"),
+  buildAppFile(options)
+);
 };

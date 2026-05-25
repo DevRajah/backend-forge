@@ -51,4 +51,17 @@ exports.featureConfigs = {
         label: "Docker",
         templateFolder: "docker",
     },
+    swagger: {
+        key: "swagger",
+        label: "Swagger/OpenAPI",
+        templateFolder: "swagger",
+        packageDependencies: {
+            "swagger-jsdoc": "^6.2.8",
+            "swagger-ui-express": "^5.0.1"
+        },
+        packageDevDependencies: {
+            "@types/swagger-jsdoc": "^6.0.4",
+            "@types/swagger-ui-express": "^4.1.8"
+        }
+    },
 };

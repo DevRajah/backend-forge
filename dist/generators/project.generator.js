@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateProject = void 0;
 const path_1 = __importDefault(require("path"));
 const fs_extra_1 = __importDefault(require("fs-extra"));
+const app_builder_1 = require("../builders/app.builder");
 const server_builder_1 = require("../builders/server.builder");
 const env_builder_1 = require("../builders/env.builder");
 const package_builder_1 = require("../builders/package.builder");
@@ -52,5 +53,6 @@ const generateProject = async (options) => {
     await fs_extra_1.default.writeFile(path_1.default.join(targetPath, ".env"), envContent);
     // I generate server.ts dynamically so selected features are wired automatically.
     await fs_extra_1.default.writeFile(path_1.default.join(targetPath, "src/server.ts"), (0, server_builder_1.buildServerFile)(options));
+    await fs_extra_1.default.writeFile(path_1.default.join(targetPath, "src/app.ts"), (0, app_builder_1.buildAppFile)(options));
 };
 exports.generateProject = generateProject;

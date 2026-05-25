@@ -77,6 +77,13 @@ export const askProjectQuestions = async (
       message: "Use Docker?",
       default: false,
     },
+
+    {
+      type: "confirm",
+      name: "useSwagger",
+      message: "Use Swagger/OpenAPI docs?",
+      default: true,
+    },
   ]);
 
   if (answers.useBullMQ && !answers.useRedis) {

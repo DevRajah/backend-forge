@@ -13,6 +13,7 @@ exports.presetConfigs = {
             useSocketIO: false,
             useJWTAuth: false,
             useDocker: false,
+            useSwagger: true,
         },
     },
     realtime: {
@@ -26,6 +27,7 @@ exports.presetConfigs = {
             useSocketIO: true,
             useJWTAuth: true,
             useDocker: true,
+            useSwagger: true,
         },
     },
     fintech: {
@@ -39,6 +41,7 @@ exports.presetConfigs = {
             useSocketIO: false,
             useJWTAuth: true,
             useDocker: true,
+            useSwagger: true,
         },
     },
 };

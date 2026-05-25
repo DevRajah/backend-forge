@@ -6,4 +6,5 @@ export interface ProjectOptions {
   useSocketIO: boolean;
   useJWTAuth: boolean;
   useDocker: boolean;
+  useSwagger: boolean;
 }

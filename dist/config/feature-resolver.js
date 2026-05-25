@@ -17,6 +17,8 @@ const getSelectedFeatures = (options) => {
         selectedFeatures.push("jwtAuth");
     if (options.useDocker)
         selectedFeatures.push("docker");
+    if (options.useSwagger)
+        selectedFeatures.push("swagger");
     return selectedFeatures;
 };
 exports.getSelectedFeatures = getSelectedFeatures;

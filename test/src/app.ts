@@ -5,6 +5,8 @@ import morgan from "morgan";
 import routes from "./routes";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { notFoundMiddleware } from "./middlewares/notFound.middleware";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./docs/swagger";
 
 // I create my Express app here so server.ts only focuses on starting the server.
 const app = express();
@@ -17,6 +19,8 @@ app.use(cors());
 
 // I log incoming requests during development so debugging is easier.
 app.use(morgan("dev"));
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // I mount all API routes under /api/v1 so the project starts with versioned APIs.
 app.use("/api/v1", routes);

@@ -21,6 +21,7 @@ export const presetConfigs: Record<PresetKey, PresetConfig> = {
       useSocketIO: false,
       useJWTAuth: false,
       useDocker: false,
+      useSwagger: true,
     },
   },
 
@@ -35,6 +36,7 @@ export const presetConfigs: Record<PresetKey, PresetConfig> = {
       useSocketIO: true,
       useJWTAuth: true,
       useDocker: true,
+      useSwagger: true,
     },
   },
 
@@ -49,6 +51,7 @@ export const presetConfigs: Record<PresetKey, PresetConfig> = {
       useSocketIO: false,
       useJWTAuth: true,
       useDocker: true,
+      useSwagger: true,
     },
   },
 };

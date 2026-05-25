@@ -71,6 +71,7 @@ Presets:
       if (answers.useSocketIO) console.log("- Socket.IO");
       if (answers.useJWTAuth) console.log("- JWT Authentication");
       if (answers.useDocker) console.log("- Docker");
+      if (answers.useSwagger) console.log("- Swagger/OpenAPI");
 
       if (
         !answers.useMongoDB &&
@@ -78,7 +79,8 @@ Presets:
         !answers.useBullMQ &&
         !answers.useSocketIO &&
         !answers.useJWTAuth &&
-        !answers.useDocker
+        !answers.useDocker &&
+        !answers.useSwagger
       ) {
         console.log("- Base Express + TypeScript architecture");
       }
