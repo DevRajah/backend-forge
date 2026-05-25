@@ -84,6 +84,13 @@ export const askProjectQuestions = async (
       message: "Use Swagger/OpenAPI docs?",
       default: true,
     },
+
+    {
+      type: "confirm",
+      name: "useZod",
+      message: "Use Zod Validation?",
+      default: true,
+    }
   ]);
 
   if (answers.useBullMQ && !answers.useRedis) {

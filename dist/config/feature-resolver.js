@@ -19,6 +19,8 @@ const getSelectedFeatures = (options) => {
         selectedFeatures.push("docker");
     if (options.useSwagger)
         selectedFeatures.push("swagger");
+    if (options.useZod)
+        selectedFeatures.push("zod");
     return selectedFeatures;
 };
 exports.getSelectedFeatures = getSelectedFeatures;

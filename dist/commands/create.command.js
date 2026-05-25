@@ -64,13 +64,16 @@ Presets:
             console.log("- Docker");
         if (answers.useSwagger)
             console.log("- Swagger/OpenAPI");
+        if (answers.useZod)
+            console.log("- Zod Validation");
         if (!answers.useMongoDB &&
             !answers.useRedis &&
             !answers.useBullMQ &&
             !answers.useSocketIO &&
             !answers.useJWTAuth &&
             !answers.useDocker &&
-            !answers.useSwagger) {
+            !answers.useSwagger &&
+            !answers.useZod) {
             console.log("- Base Express + TypeScript architecture");
         }
     }

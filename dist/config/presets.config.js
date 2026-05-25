@@ -14,6 +14,7 @@ exports.presetConfigs = {
             useJWTAuth: false,
             useDocker: false,
             useSwagger: true,
+            useZod: true,
         },
     },
     realtime: {
@@ -28,6 +29,7 @@ exports.presetConfigs = {
             useJWTAuth: true,
             useDocker: true,
             useSwagger: true,
+            useZod: true,
         },
     },
     fintech: {
@@ -42,6 +44,7 @@ exports.presetConfigs = {
             useJWTAuth: true,
             useDocker: true,
             useSwagger: true,
+            useZod: true,
         },
     },
 };

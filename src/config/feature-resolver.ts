@@ -12,6 +12,7 @@ export const getSelectedFeatures = (options: ProjectOptions): FeatureKey[] => {
     if (options.useJWTAuth) selectedFeatures.push("jwtAuth");
     if (options.useDocker) selectedFeatures.push("docker");
     if (options.useSwagger) selectedFeatures.push("swagger");
+    if (options.useZod) selectedFeatures.push("zod");
     return selectedFeatures;
 };
 

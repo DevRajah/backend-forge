@@ -64,4 +64,12 @@ exports.featureConfigs = {
             "@types/swagger-ui-express": "^4.1.8"
         }
     },
+    zod: {
+        key: "zod",
+        label: "Zod Validation",
+        templateFolder: "zod",
+        packageDependencies: {
+            zod: "^3.24.1",
+        }
+    }
 };

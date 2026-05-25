@@ -87,10 +87,10 @@ export interface Create${pascalName}Input {
 export const buildValidatorFile = (moduleName: string) => {
   const pascalName = toPascalCase(moduleName);
 
-  return `// I keep validation logic here so invalid data is rejected before reaching the service layer.
+  return `// I keep ${pascalName} validation logic here.
+// Add Zod validation by creating the project with Zod enabled.
 
 export const validateCreate${pascalName} = (payload: unknown) => {
-  // Add Joi/Zod validation later if this module needs strict request validation.
   return payload;
 };
 `;
@@ -195,9 +195,28 @@ export const delete${pascalName} = async (id: string) => {
 `;
 };
 
-export const buildCrudRoutesFile = (moduleName: string) => {
+export const buildCrudRoutesFile = (
+  moduleName: string,
+  useZod?: boolean
+) => {
   const kebabName = toKebabCase(moduleName);
   const pascalName = toPascalCase(moduleName);
+
+  const validationImports = useZod
+    ? `import { validateRequest } from "../../middlewares/validate.middleware";
+import {
+  create${pascalName}Schema,
+  update${pascalName}Schema,
+} from "./${kebabName}.validator";`
+    : "";
+
+  const createMiddleware = useZod
+    ? `validateRequest(create${pascalName}Schema), `
+    : "";
+
+  const updateMiddleware = useZod
+    ? `validateRequest(update${pascalName}Schema), `
+    : "";
 
   return `import { Router } from "express";
 import {
@@ -207,13 +226,14 @@ import {
   get${pascalName}ById,
   update${pascalName},
 } from "./${kebabName}.controller";
+${validationImports}
 
 const router = Router();
 
 router.get("/", getAll${pascalName});
 router.get("/:id", get${pascalName}ById);
-router.post("/", create${pascalName});
-router.patch("/:id", update${pascalName});
+router.post("/", ${createMiddleware}create${pascalName});
+router.patch("/:id", ${updateMiddleware}update${pascalName});
 router.delete("/:id", delete${pascalName});
 
 export default router;
@@ -232,5 +252,20 @@ export interface Create${pascalName}Input {
 export interface Update${pascalName}Input {
   name?: string;
 }
+`;
+};
+
+export const buildZodCrudValidatorFile = (moduleName: string) => {
+  const pascalName = toPascalCase(moduleName);
+
+  return `import { z } from "zod";
+
+// I validate create requests before they reach the controller.
+export const create${pascalName}Schema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters long"),
+});
+
+// I validate update requests and allow partial updates.
+export const update${pascalName}Schema = create${pascalName}Schema.partial();
 `;
 };

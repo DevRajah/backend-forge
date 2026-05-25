@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildCrudTypesFile = exports.buildCrudRoutesFile = exports.buildCrudServiceFile = exports.buildCrudControllerFile = exports.buildValidatorFile = exports.buildTypesFile = exports.buildRoutesFile = exports.buildServiceFile = exports.buildControllerFile = void 0;
+exports.buildZodCrudValidatorFile = exports.buildCrudTypesFile = exports.buildCrudRoutesFile = exports.buildCrudServiceFile = exports.buildCrudControllerFile = exports.buildValidatorFile = exports.buildTypesFile = exports.buildRoutesFile = exports.buildServiceFile = exports.buildControllerFile = void 0;
 const string_utils_1 = require("../../utils/string.utils");
 const buildControllerFile = (moduleName) => {
     const kebabName = (0, string_utils_1.toKebabCase)(moduleName);
@@ -84,10 +84,10 @@ export interface Create${pascalName}Input {
 exports.buildTypesFile = buildTypesFile;
 const buildValidatorFile = (moduleName) => {
     const pascalName = (0, string_utils_1.toPascalCase)(moduleName);
-    return `// I keep validation logic here so invalid data is rejected before reaching the service layer.
+    return `// I keep ${pascalName} validation logic here.
+// Add Zod validation by creating the project with Zod enabled.
 
 export const validateCreate${pascalName} = (payload: unknown) => {
-  // Add Joi/Zod validation later if this module needs strict request validation.
   return payload;
 };
 `;
@@ -190,9 +190,22 @@ export const delete${pascalName} = async (id: string) => {
 `;
 };
 exports.buildCrudServiceFile = buildCrudServiceFile;
-const buildCrudRoutesFile = (moduleName) => {
+const buildCrudRoutesFile = (moduleName, useZod) => {
     const kebabName = (0, string_utils_1.toKebabCase)(moduleName);
     const pascalName = (0, string_utils_1.toPascalCase)(moduleName);
+    const validationImports = useZod
+        ? `import { validateRequest } from "../../middlewares/validate.middleware";
+import {
+  create${pascalName}Schema,
+  update${pascalName}Schema,
+} from "./${kebabName}.validator";`
+        : "";
+    const createMiddleware = useZod
+        ? `validateRequest(create${pascalName}Schema), `
+        : "";
+    const updateMiddleware = useZod
+        ? `validateRequest(update${pascalName}Schema), `
+        : "";
     return `import { Router } from "express";
 import {
   create${pascalName},
@@ -201,13 +214,14 @@ import {
   get${pascalName}ById,
   update${pascalName},
 } from "./${kebabName}.controller";
+${validationImports}
 
 const router = Router();
 
 router.get("/", getAll${pascalName});
 router.get("/:id", get${pascalName}ById);
-router.post("/", create${pascalName});
-router.patch("/:id", update${pascalName});
+router.post("/", ${createMiddleware}create${pascalName});
+router.patch("/:id", ${updateMiddleware}update${pascalName});
 router.delete("/:id", delete${pascalName});
 
 export default router;
@@ -228,3 +242,17 @@ export interface Update${pascalName}Input {
 `;
 };
 exports.buildCrudTypesFile = buildCrudTypesFile;
+const buildZodCrudValidatorFile = (moduleName) => {
+    const pascalName = (0, string_utils_1.toPascalCase)(moduleName);
+    return `import { z } from "zod";
+
+// I validate create requests before they reach the controller.
+export const create${pascalName}Schema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters long"),
+});
+
+// I validate update requests and allow partial updates.
+export const update${pascalName}Schema = create${pascalName}Schema.partial();
+`;
+};
+exports.buildZodCrudValidatorFile = buildZodCrudValidatorFile;

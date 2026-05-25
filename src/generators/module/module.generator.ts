@@ -13,9 +13,17 @@ import {
   buildServiceFile,
   buildTypesFile,
   buildValidatorFile,
+  buildZodCrudValidatorFile,
 } from "../../builders/module/module-files.builder";
 import { registerModuleRoute } from "../../builders/module/route-registrar.builder";
 import { validateBackendForgeProject } from "../../utils/project-validator";
+
+const projectUsesZod = async () => {
+  const packageJsonPath = path.join(process.cwd(), "package.json");
+  const packageJson = await fs.readJson(packageJsonPath);
+
+  return Boolean(packageJson.dependencies?.zod);
+};
 
 export const generateModule = async (
   moduleName: string,
@@ -24,11 +32,13 @@ export const generateModule = async (
   await validateBackendForgeProject();
 
   const kebabName = toKebabCase(moduleName);
+  const useZod = await projectUsesZod();
 
   const modulesRoot = path.join(process.cwd(), "src/modules");
   const modulePath = path.join(modulesRoot, kebabName);
 
   const moduleAlreadyExists = await fs.pathExists(modulePath);
+  
 
   if (moduleAlreadyExists) {
     throw new Error(
@@ -52,10 +62,12 @@ export const generateModule = async (
       : buildServiceFile(moduleName)
   );
 
-  await fs.writeFile(
-    path.join(modulePath, `${kebabName}.routes.ts`),
-    options?.crud ? buildCrudRoutesFile(moduleName) : buildRoutesFile(moduleName)
-  );
+ await fs.writeFile(
+  path.join(modulePath, `${kebabName}.routes.ts`),
+  options?.crud
+    ? buildCrudRoutesFile(moduleName, useZod)
+    : buildRoutesFile(moduleName)
+);
 
   await fs.writeFile(
     path.join(modulePath, `${kebabName}.types.ts`),
@@ -64,7 +76,9 @@ export const generateModule = async (
 
   await fs.writeFile(
     path.join(modulePath, `${kebabName}.validator.ts`),
-    buildValidatorFile(moduleName)
+    useZod && options?.crud
+      ? buildZodCrudValidatorFile(moduleName)
+      : buildValidatorFile(moduleName)
   );
 
   await registerModuleRoute(moduleName);

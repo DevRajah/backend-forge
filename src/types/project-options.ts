@@ -7,4 +7,5 @@ export interface ProjectOptions {
   useJWTAuth: boolean;
   useDocker: boolean;
   useSwagger: boolean;
+  useZod: boolean;
 }

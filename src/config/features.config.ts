@@ -5,7 +5,8 @@ export type FeatureKey =
   | "socketio"
   | "jwtAuth"
   | "docker"
-  | "swagger";
+  | "swagger"
+  | "zod";
 
 export interface FeatureConfig {
   key: FeatureKey;
@@ -80,9 +81,19 @@ export const featureConfigs: Record<FeatureKey, FeatureConfig> = {
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
+
   packageDevDependencies: {
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8"
   }
 },
+
+  zod: {
+    key: "zod",
+    label: "Zod Validation",
+    templateFolder: "zod",
+    packageDependencies: {
+      zod: "^3.24.1",
+    }
+  }
 };
