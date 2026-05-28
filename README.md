@@ -21,6 +21,8 @@ Production-grade backend scaffolding and architecture automation CLI for modern 
 - Backend Forge project validation
 - Architecture-aware backend wiring
 - Optional architecture presets
+- Swagger/OpenAPI generation
+- Zod Validation
 
 ---
 
@@ -59,6 +61,23 @@ backend-forge generate module users
 ```bash
 backend-forge generate module products --crud
 ```
+
+---
+
+
+## Validation Example
+
+Generated CRUD modules automatically include Zod validation.
+
+Example generated validator:
+
+```ts
+export const createProductSchema = z.object({
+  name: z.string().min(2),
+});
+```
+
+Invalid requests automatically return structured validation errors.
 
 ---
 
@@ -190,7 +209,6 @@ npm run dev
 
 ## Roadmap
 
-- Swagger/OpenAPI generation
 - Prisma/PostgreSQL support
 - Authentication presets
 - Microservice architecture templates
