@@ -2,7 +2,7 @@ import inquirer from "inquirer";
 import { ProjectOptions } from "../types/project-options";
 import { PresetKey, presetConfigs } from "../config/presets.config";
 
-// I keep all CLI questions here so command files stay clean.
+//keeping all CLI questions here so command files stay clean.
 export const askProjectQuestions = async (
   preset?: PresetKey
 ): Promise<ProjectOptions> => {
